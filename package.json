@@ -1,0 +1,36 @@
+{
+  "name": "quave-code-challenge",
+  "private": true,
+  "scripts": {
+    "start": "meteor run --exclude-archs web.browser.legacy,web.cordova",
+    "quave-eslint": "eslint .",
+    "quave-prettier": "prettier --write \"**/*.js\"",
+    "quave-check": "npm run quave-eslint && npm run quave-prettier"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.26.0",
+    "meteor-node-stubs": "^1.2.12",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "meteor": {
+    "mainModule": {
+      "client": "client/main.js",
+      "server": "server/main.js"
+    }
+  },
+  "devDependencies": {
+    "@quave/eslint-config-quave": "^3.0.0",
+    "@types/meteor": "^2.9.8",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
+    "lefthook": "^1.8.2",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@quave/quave"
+    ]
+  }
+}
