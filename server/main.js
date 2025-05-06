@@ -1,9 +1,8 @@
 import { Meteor } from 'meteor/meteor';
-import { loadInitialData } from '../infra/initial-data';
+import { loadInitialData } from './loadInitialData';
+import '../api/methods/people/people.methods';
+import '../api/methods/communities/communities.methods';
 
 Meteor.startup(async () => {
-  // DON'T CHANGE THE NEXT LINE
-  await loadInitialData();
-
-  // YOU CAN DO WHATEVER YOU WANT HERE
+await loadInitialData();
 });
