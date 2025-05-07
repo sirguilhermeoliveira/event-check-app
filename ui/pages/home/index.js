@@ -114,6 +114,7 @@ export const Home = () => {
             onChange={handleSearch}
           />
 
+<div class="grid gap-4 grid-cols-[repeat(auto-fit,minmax(250px,1fr))]">
           {people?.people?.map((person) => (
             <PersonCard
             key={person._id}
@@ -124,6 +125,7 @@ export const Home = () => {
             fiveSecondsDelay={fiveSecondsDelay[person._id]} 
             />
           ))}
+          </div>
 
           <PaginationControls
             page={page}
