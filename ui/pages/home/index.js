@@ -7,6 +7,7 @@ import { PaginationControls } from '../../components/pagination-controls/index';
 import { EventSummary } from '../../components/event-summary/index';
 import { Meteor } from 'meteor/meteor';
 import { formatDate } from '../../utils/format-date';
+import { NoPeopleFound } from '../../components/no-people-found';
 
 
 export const Home = () => {
@@ -21,16 +22,12 @@ export const Home = () => {
 
   const checkedInPeople = people?.totalCheckIn
   const notCheckedInCount = people?.total - people?.totalCheckIn
-  const companyBreakdown = people?.people?.filter((p) => !!p.checkInDate).reduce((acc, person) => {
-    const company = person.companyName || "No associated company";
-    acc[company] = (acc[company] || 0) + 1;
-    return acc;
-  }, {});
+  const companyBreakdown = people?.totalCheckInByCompany
 
-  const fetchPeople = () => {
-    Meteor.call('people.findAll', searchTerm, page, (error, result) => {
+  const fetchPeople = (eventId) => {
+    Meteor.call('people.findAllByEvent', searchTerm, page, limit=5, eventId, (error, result) => {
       if (error) {
-        alert('Error in people.findAll:', error);
+        alert('Error in people.findAllByEvent:', error);
       } else {
         setPeople(result);
         setTotalPages(result.totalPages);
@@ -38,6 +35,14 @@ export const Home = () => {
     });
   };
 
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  useEffect(() => {
+    fetchPeople(selectedEventId);
+  }, [searchTerm, page]);
 
   const fetchEvents = () => {
     setLoading(true);
@@ -51,14 +56,6 @@ export const Home = () => {
     });
   }
 
-  useEffect(() => {
-    fetchEvents();
-  }, []);
-
-  useEffect(() => {
-    fetchPeople();
-  }, [searchTerm, page]);
-
   const handleCheckIn = (personId) => {
     Meteor.call('people.checkIn', personId, (error) => {
       if (error) {
@@ -68,7 +65,7 @@ export const Home = () => {
           ...prevState,
           [personId]: true,
         }));
-        fetchPeople()
+        fetchPeople(selectedEventId)
         setTimeout(() => {
           setFiveSecondsDelay((prevState) => ({
             ...prevState,
@@ -84,7 +81,7 @@ export const Home = () => {
       if (error) {
         alert(error.reason || 'Error in check-out');
       } else {
-        fetchPeople()
+        fetchPeople(selectedEventId)
       }
   })}
 
@@ -93,28 +90,40 @@ export const Home = () => {
     setPage(1);
   };
 
+  const handleEventChange = (value) => {
+    setPage(1)
+    setSelectedEventId(value);
+    fetchPeople(value);
+  };
+  
   return (
     <div className="p-4">
-      {loading ? <Loading /> : (
+      {
+        loading ? <Loading/> :
+        <div>
+        
+                {events.length > 0 &&
+                                <EventSelect
+                      events={events}
+                      selectedEventId={selectedEventId}
+                      onChange={(e) => handleEventChange(e.target.value)}
+                      />
+                }
+      {selectedEventId &&
         <>
-          <EventSelect
-            events={events}
-            selectedEventId={selectedEventId}
-            onChange={(e) => setSelectedEventId(e.target.value)}
-          />
-
 <EventSummary
             checkedInCount={checkedInPeople}
             notCheckedInCount={notCheckedInCount}
             companyBreakdown={companyBreakdown}
-          />
+            />
+          
 
           <SearchInput
             searchTerm={searchTerm}
             onChange={handleSearch}
           />
 
-<div class="grid gap-4 grid-cols-[repeat(auto-fit,minmax(250px,1fr))]">
+<div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(250px,1fr))]">
           {people?.people?.map((person) => (
             <PersonCard
             key={person._id}
@@ -126,15 +135,16 @@ export const Home = () => {
             />
           ))}
           </div>
-
+          {people?.total > 0 && (
           <PaginationControls
             page={page}
             totalPages={totalPages}
             onPrev={() => setPage((prev) => prev - 1)}
             onNext={() => setPage((prev) => prev + 1)}
-          />
-        </>
-      )}
+          />)}
+        </>}
+      {!loading && events.length >= 0 && <NoPeopleFound events={events} people={people?.people}  selectedEventId={selectedEventId} />}
+      </div>}
     </div>
   );
 };

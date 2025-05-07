@@ -40,24 +40,37 @@ Meteor.methods({
     });
 },
 
-  async 'people.findAll'(searchTerm = '', page = 1, limit = 5) {
+  async 'people.findAllByEvent'(searchTerm = '', page = 1, limit = 5, selectedEventId = '') {
     check(searchTerm, String);
     check(page, Number);
     check(limit, Number);
+    check(selectedEventId, String);
 
-    const nameParts = searchTerm.split(' ');
-    const firstName = nameParts[0];
-    const lastName = nameParts.slice(1).join(' ');
+    const nameParts = searchTerm.trim().split(/\s+/); 
+
+    const nameRegexFilters = nameParts.map(part => ({
+      $or: [
+        { firstName: { $regex: part, $options: 'i' } },
+        { lastName: { $regex: part, $options: 'i' } },
+      ]
+    }));
     
     const query = {
       $and: [
-        { firstName: { $regex: firstName, $options: 'i' } },
-        { lastName: { $regex: lastName, $options: 'i' } }
+        { communityId: selectedEventId },
+        ...(searchTerm ? nameRegexFilters : [])
       ]
     };
-
-    const total = await People.find().countAsync();
-    const totalCheckIn = await People.find({ checkInDate: { $ne: null } }).countAsync();
+  
+    const total = await People.find(query).countAsync();
+    const totalCheckIn = await People.find({
+      communityId: selectedEventId,
+      checkInDate: { $ne: null }
+    }).countAsync();
+    const totalCheckInByCompany = await People.find({
+      communityId: selectedEventId,
+      checkInDate: { $ne: null }
+    }).fetch();
     const totalPages = Math.ceil(total / limit);
 
     const people = await People.find(query, {
@@ -70,6 +83,7 @@ Meteor.methods({
     people,
     total,
     totalPages,
-    totalCheckIn
+    totalCheckIn,
+    totalCheckInByCompany
   };
   }})
