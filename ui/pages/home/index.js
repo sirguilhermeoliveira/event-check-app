@@ -103,6 +103,12 @@ export const Home = () => {
             onChange={(e) => setSelectedEventId(e.target.value)}
           />
 
+<EventSummary
+            checkedInCount={checkedInPeople}
+            notCheckedInCount={notCheckedInCount}
+            companyBreakdown={companyBreakdown}
+          />
+
           <SearchInput
             searchTerm={searchTerm}
             onChange={handleSearch}
@@ -110,12 +116,12 @@ export const Home = () => {
 
           {people?.people?.map((person) => (
             <PersonCard
-              key={person._id}
-              person={person}
-              onCheckIn={handleCheckIn}
-              onCheckOut={handleCheckOut}
-              formatDate={formatDate}
-              fiveSecondsDelay={fiveSecondsDelay[person._id]} 
+            key={person._id}
+            person={person}
+            onCheckIn={handleCheckIn}
+            onCheckOut={handleCheckOut}
+            formatDate={formatDate}
+            fiveSecondsDelay={fiveSecondsDelay[person._id]} 
             />
           ))}
 
@@ -124,12 +130,6 @@ export const Home = () => {
             totalPages={totalPages}
             onPrev={() => setPage((prev) => prev - 1)}
             onNext={() => setPage((prev) => prev + 1)}
-          />
-
-          <EventSummary
-            checkedInCount={checkedInPeople}
-            notCheckedInCount={notCheckedInCount}
-            companyBreakdown={companyBreakdown}
           />
         </>
       )}

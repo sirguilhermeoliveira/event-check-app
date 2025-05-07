@@ -3,7 +3,7 @@ export const PersonCard = ({ person, onCheckIn, onCheckOut, formatDate, fiveSeco
   const delay = fiveSecondsDelay || false;
 
   return (
-    <div className="border p-4 my-2 rounded shadow">
+    <div className="border p-4 my-2 rounded shadow text-center">
       <p><strong>{person.firstName} {person.lastName}</strong></p>
       <p>{person.company}</p>
       <p>{person.title}</p>
@@ -11,9 +11,9 @@ export const PersonCard = ({ person, onCheckIn, onCheckOut, formatDate, fiveSeco
       <p>Check-out: {formatDate(person.checkOutDate)}</p>
   
       {!person.checkInDate && (
-        <button
+        <button 
           onClick={() => onCheckIn(person._id)}
-          className="bg-green-500 text-white px-3 py-1 rounded mt-2"
+          className="bg-green-500 text-white px-3 py-1 rounded mt-2 font-bold border shadow-lg w-full"
         >
           Check-in {person.firstName}
         </button>
@@ -22,7 +22,7 @@ export const PersonCard = ({ person, onCheckIn, onCheckOut, formatDate, fiveSeco
       {person.checkInDate && !person.checkOutDate && !delay && (
         <button
           onClick={() => onCheckOut(person._id)}
-          className="bg-blue-500 text-white px-3 py-1 rounded mt-2"
+          className="bg-blue-500 text-white px-3 py-1 rounded mt-2 font-bold w-full"
         >
           Check-out {person.firstName}
         </button>
