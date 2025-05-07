@@ -6,27 +6,34 @@ import { PersonCard } from '../../components/person-card/index';
 import { PaginationControls } from '../../components/pagination-controls/index';
 import { EventSummary } from '../../components/event-summary/index';
 import { Meteor } from 'meteor/meteor';
+import { formatDate } from '../../utils/format-date';
 
 
 export const Home = () => {
   const [selectedEventId, setSelectedEventId] = useState("");
   const [events, setEvents] = useState([]);
   const [people, setPeople] = useState([]);
-  const [totalPeople, setTotalPeople] = useState();
   const [searchTerm, setSearchTerm] = useState('');
   const [totalPages, setTotalPages] = useState();
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [fiveSecondsDelay, setFiveSecondsDelay] = useState({});
-  const limit = 5
+
+  const checkedInPeople = people?.totalCheckIn
+  const notCheckedInCount = people?.total - people?.totalCheckIn
+  const companyBreakdown = people?.people?.filter((p) => !!p.checkInDate).reduce((acc, person) => {
+    const company = person.companyName || "No associated company";
+    acc[company] = (acc[company] || 0) + 1;
+    return acc;
+  }, {});
 
   const fetchPeople = () => {
-    Meteor.call('people.findAll', searchTerm, page, limit, (error, result) => {
+    Meteor.call('people.findAll', searchTerm, page, (error, result) => {
       if (error) {
         alert('Error in people.findAll:', error);
       } else {
-        setTotalPeople(result.total);
-        setPeople(result.people);
+        console.log('result', result)
+        setPeople(result);
         setTotalPages(result.totalPages);
       }
     });
@@ -56,7 +63,7 @@ export const Home = () => {
   const handleCheckIn = (personId) => {
     Meteor.call('people.checkIn', personId, (error) => {
       if (error) {
-        alert(error.reason || 'Erro ao fazer check-in');
+        alert(error.reason || 'Error in check-in');
       } else {
         setFiveSecondsDelay((prevState) => ({
           ...prevState,
@@ -76,30 +83,11 @@ export const Home = () => {
   const handleCheckOut = (personId) => {
     Meteor.call('people.checkOut', personId, (error) => {
       if (error) {
-        alert(error.reason || 'Erro ao fazer check-out');
+        alert(error.reason || 'Error in check-out');
       } else {
         fetchPeople()
       }
   })}
-
-  const formatDate = (date) =>
-    date
-      ? new Date(date).toLocaleString('en-US', {
-          month: '2-digit',
-          day: '2-digit',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-        })
-      : 'N/A';
-
-  const checkedInPeople = people.filter((p) => !!p.checkInDate);
-  const notCheckedInCount = Number(totalPeople) - Number(checkedInPeople.length)
-  const companyBreakdown = checkedInPeople.reduce((acc, person) => {
-    const company = person.companyName || "No associated company";
-    acc[company] = (acc[company] || 0) + 1;
-    return acc;
-  }, {});
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -121,7 +109,7 @@ export const Home = () => {
             onChange={handleSearch}
           />
 
-          {people.map((person) => (
+          {people?.people?.map((person) => (
             <PersonCard
               key={person._id}
               person={person}
@@ -140,7 +128,7 @@ export const Home = () => {
           />
 
           <EventSummary
-            checkedInCount={checkedInPeople.length}
+            checkedInCount={checkedInPeople}
             notCheckedInCount={notCheckedInCount}
             companyBreakdown={companyBreakdown}
           />

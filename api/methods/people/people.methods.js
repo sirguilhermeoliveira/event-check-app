@@ -53,6 +53,8 @@ Meteor.methods({
     };
 
     const total = await People.find(query).countAsync();
+    const totalCheckIn = await People.find({ checkInDate: { $ne: null } }).countAsync();
+    const totalCheckOut = await People.find({ checkOutDate: { $ne: null } }).countAsync(); 
     const totalPages = Math.ceil(total / limit);
 
     const people = await People.find(query, {
@@ -64,6 +66,8 @@ Meteor.methods({
   return {
     people,
     total,
-    totalPages
+    totalPages,
+    totalCheckIn,
+    totalCheckOut
   };
   }})
