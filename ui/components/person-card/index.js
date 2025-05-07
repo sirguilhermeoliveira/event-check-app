@@ -4,7 +4,7 @@ export const PersonCard = ({ person, onCheckIn, onCheckOut, formatDate, fiveSeco
 
   return (
     <div className="border p-4 my-2 rounded shadow text-center">
-      <p><strong>{person.firstName} {person.lastName}</strong></p>
+      <p><strong>👤 {person.firstName} {person.lastName}</strong></p>
       <p>{person.company}</p>
       <p>{person.title}</p>
       <p>Check-in: {formatDate(person.checkInDate)}</p>
