@@ -32,7 +32,6 @@ export const Home = () => {
       if (error) {
         alert('Error in people.findAll:', error);
       } else {
-        console.log('result', result)
         setPeople(result);
         setTotalPages(result.totalPages);
       }

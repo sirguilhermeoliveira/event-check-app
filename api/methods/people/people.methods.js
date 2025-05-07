@@ -9,7 +9,7 @@ Meteor.methods({
     const person = await People.findOneAsync(personId);
 
     if (!person) {
-      throw new Meteor.Error('person-not-found', 'Pessoa não encontrada');
+      throw new Meteor.Error('person-not-found', 'Person not found');
     }
 
     await People.updateAsync(personId, {
@@ -25,11 +25,11 @@ Meteor.methods({
 
     const person = await People.findOneAsync(personId);
     if (!person) {
-      throw new Meteor.Error('person-not-found', 'Pessoa não encontrada');
+      throw new Meteor.Error('person-not-found', 'Person not found');
     }
 
     if (!person.checkInDate) {
-      throw new Meteor.Error('not-checked-in', 'Esta pessoa ainda não fez check-in');
+      throw new Meteor.Error('not-checked-in', 'This person didn\'t check in');
     }
 
     await People.updateAsync(personId, {
@@ -41,6 +41,10 @@ Meteor.methods({
 },
 
   async 'people.findAll'(searchTerm = '', page = 1, limit = 5) {
+    check(searchTerm, String);
+    check(page, Number);
+    check(limit, Number);
+
     const nameParts = searchTerm.split(' ');
     const firstName = nameParts[0];
     const lastName = nameParts.slice(1).join(' ');
@@ -52,9 +56,8 @@ Meteor.methods({
       ]
     };
 
-    const total = await People.find(query).countAsync();
+    const total = await People.find().countAsync();
     const totalCheckIn = await People.find({ checkInDate: { $ne: null } }).countAsync();
-    const totalCheckOut = await People.find({ checkOutDate: { $ne: null } }).countAsync(); 
     const totalPages = Math.ceil(total / limit);
 
     const people = await People.find(query, {
@@ -67,7 +70,6 @@ Meteor.methods({
     people,
     total,
     totalPages,
-    totalCheckIn,
-    totalCheckOut
+    totalCheckIn
   };
   }})
