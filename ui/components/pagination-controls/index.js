@@ -9,7 +9,7 @@ export const PaginationControls = ({ page, totalPages, onPrev, onNext }) => (
       >
         Previous
       </button>
-      <span>Page {page} of {totalPages}</span>
+      <span>Page <strong>{page}</strong> of {totalPages}</span>
       <button
         disabled={page >= totalPages}
         onClick={onNext}
