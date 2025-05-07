@@ -17,6 +17,7 @@ export const Home = () => {
   const [totalPages, setTotalPages] = useState();
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [fiveSecondsDelay, setFiveSecondsDelay] = useState({});
   const limit = 5
 
   const fetchPeople = () => {
@@ -57,7 +58,17 @@ export const Home = () => {
       if (error) {
         alert(error.reason || 'Erro ao fazer check-in');
       } else {
+        setFiveSecondsDelay((prevState) => ({
+          ...prevState,
+          [personId]: true,
+        }));
         fetchPeople()
+        setTimeout(() => {
+          setFiveSecondsDelay((prevState) => ({
+            ...prevState,
+            [personId]: false,
+          }));
+        }, 5000);
       }
     });
   };
@@ -69,8 +80,7 @@ export const Home = () => {
       } else {
         fetchPeople()
       }
-    });
-  };
+  })}
 
   const formatDate = (date) =>
     date
@@ -118,6 +128,7 @@ export const Home = () => {
               onCheckIn={handleCheckIn}
               onCheckOut={handleCheckOut}
               formatDate={formatDate}
+              fiveSecondsDelay={fiveSecondsDelay[person._id]} 
             />
           ))}
 

@@ -1,6 +1,8 @@
 import React from 'react';
+export const PersonCard = ({ person, onCheckIn, onCheckOut, formatDate, fiveSecondsDelay }) => {
+  const delay = fiveSecondsDelay || false;
 
-export const PersonCard = ({ person, onCheckIn, onCheckOut, formatDate }) => (
+  return (
     <div className="border p-4 my-2 rounded shadow">
       <p><strong>{person.firstName} {person.lastName}</strong></p>
       <p>{person.company}</p>
@@ -17,7 +19,7 @@ export const PersonCard = ({ person, onCheckIn, onCheckOut, formatDate }) => (
         </button>
       )}
   
-      {person.checkInDate && !person.checkOutDate && (
+      {person.checkInDate && !person.checkOutDate && !delay && (
         <button
           onClick={() => onCheckOut(person._id)}
           className="bg-blue-500 text-white px-3 py-1 rounded mt-2"
@@ -27,3 +29,4 @@ export const PersonCard = ({ person, onCheckIn, onCheckOut, formatDate }) => (
       )}
     </div>
   );
+};
