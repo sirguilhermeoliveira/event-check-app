@@ -1,6 +1,10 @@
 import React from 'react';
+import { SearchInputProps } from './types';
 
-export const SearchInput = ({ searchTerm, onChange }) => (
+export const SearchInput: React.FC<SearchInputProps> = ({
+  searchTerm,
+  onChange,
+}) => (
     <input
       type="text"
       placeholder="Search by name"

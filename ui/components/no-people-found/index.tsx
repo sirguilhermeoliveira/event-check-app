@@ -1,6 +1,7 @@
 import React from 'react';
+import { NoPeopleProps } from './types';
 
-export const NoPeopleFound = ({events, people, selectedEventId}) => (
+export const NoPeopleFound: React.FC<NoPeopleProps> = ({events, people, selectedEventId}) => (
   <div className="flex items-center justify-center h-screen">
     {!events && !people ? "No events or people found" :
     <div>

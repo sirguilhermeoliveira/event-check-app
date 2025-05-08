@@ -1,10 +1,12 @@
 import { Meteor } from 'meteor/meteor';
 import { People } from '../../collections/people/people';
 import { check } from 'meteor/check';
+import { Person } from 'shared/types';
+import { PeopleResponse } from 'ui/pages/home/types';
 
 Meteor.methods({
- async 'people.checkIn'(personId) {
-      check(personId, String);
+ async 'people.checkIn'(personId: string): Promise<void> {
+    check(personId, String);
         
     const person = await People.findOneAsync(personId);
 
@@ -20,7 +22,7 @@ Meteor.methods({
     });
   },
 
-  async 'people.checkOut'(personId) {
+  async 'people.checkOut'(personId: string): Promise<void> {
     check(personId, String);
 
     const person = await People.findOneAsync(personId);
@@ -40,12 +42,17 @@ Meteor.methods({
     });
 },
 
-  async 'people.findAllByEvent'(searchTerm = '', page = 1, limit = 5, selectedEventId = '') {
+  async 'people.findAllByEvent'(
+    searchTerm: string = '',
+    page: number = 1,
+    limit: number = 5,
+    selectedEventId: string = ''
+  ): Promise<PeopleResponse> {
     check(searchTerm, String);
     check(page, Number);
     check(limit, Number);
     check(selectedEventId, String);
-
+    
     const nameParts = searchTerm.trim().split(/\s+/); 
 
     const nameRegexFilters = nameParts.map(part => ({
@@ -54,36 +61,49 @@ Meteor.methods({
         { lastName: { $regex: part, $options: 'i' } },
       ]
     }));
+
+    interface Query {
+      $and: (({ communityId: string; } | { $or: ({ firstName: { $regex: string; $options: string; }; } | { lastName: { $regex: string; $options: string; }; })[]; })[] );
+    }
     
-    const query = {
+    const query: Query = {
       $and: [
         { communityId: selectedEventId },
         ...(searchTerm ? nameRegexFilters : [])
       ]
     };
-  
+
     const total = await People.find(query).countAsync();
     const totalCheckIn = await People.find({
       communityId: selectedEventId,
       checkInDate: { $ne: null }
     }).countAsync();
-    const totalCheckInByCompany = await People.find({
+
+    const checkedInPeople = await People.find({
       communityId: selectedEventId,
       checkInDate: { $ne: null }
-    }).fetch();
+    }).fetchAsync() as Person[];
+
+    const totalCheckInByCompany: Record<string, number> = checkedInPeople.reduce((acc: Record<string, number>, person: Person) => {
+      if (person.companyName) {
+        acc[person.companyName] = (acc[person.companyName] || 0) + 1;
+      }
+      return acc;
+    }, {});
+
     const totalPages = Math.ceil(total / limit);
 
-    const people = await People.find(query, {
+    const people = await People.find(query as any, {
       skip: (page - 1) * limit,
       limit,
       sort: { firstName: 1 }
-    }).fetch();
+    }).fetchAsync() as Person[];
 
-  return {
-    people,
-    total,
-    totalPages,
-    totalCheckIn,
-    totalCheckInByCompany
-  };
+    return {
+      people,
+      total,
+      totalPages,
+      totalCheckIn,
+      totalCheckInByCompany
+    };
   }})

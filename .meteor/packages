@@ -9,3 +9,4 @@ static-html@1.4.0
 hot-module-replacement@0.5.4
 
 react-meteor-data
+typescript

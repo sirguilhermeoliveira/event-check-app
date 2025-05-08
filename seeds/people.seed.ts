@@ -1,4 +1,6 @@
-export const PEOPLE_DATA = [
+import { Person } from "shared/types";
+
+export const PEOPLE_DATA: Omit<Person, '_id'>[] = [
     {
       firstName: 'Rebekah',
       lastName: 'Tempest',

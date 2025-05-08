@@ -1,11 +1,19 @@
 import React from 'react';
+import { EventSummaryProps, GroupedCompanies } from './types';
 
-export const EventSummary = ({ checkedInCount, notCheckedInCount, companyBreakdown }) => {
-  const groupedCompanies = companyBreakdown?.reduce((acc, curr) => {
-    const name = curr.companyName || 'No associated company';
-    acc[name] = (acc[name] || 0) + 1;
-    return acc;
-  }, {});
+export const EventSummary: React.FC<EventSummaryProps> = ({
+  checkedInCount,
+  notCheckedInCount,
+  companyBreakdown,
+}) => {
+  const groupedCompanies: GroupedCompanies = (companyBreakdown && Array.isArray(companyBreakdown))
+    ? companyBreakdown.reduce((acc: any, curr: any) => {
+        const name = curr.companyName || 'No associated company';
+        acc[name] = (acc[name] || 0) + 1;
+        return acc;
+      }, {})
+    : {};
+
 
   return (
     <div className="mt-4 p-4 border rounded flex flex-col items-center justify-center">

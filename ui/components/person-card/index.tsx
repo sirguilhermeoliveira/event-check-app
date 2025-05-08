@@ -1,6 +1,7 @@
 import React from 'react';
+import { PersonCardProps } from './types';
 
-export const PersonCard = ({ person, onCheckIn, onCheckOut, formatDate, fiveSecondsDelay }) => {
+export const PersonCard: React.FC<PersonCardProps> = ({ person, onCheckIn, onCheckOut, formatDate, fiveSecondsDelay }) => {
   const delay = fiveSecondsDelay || false;
 
   return (
@@ -8,10 +9,10 @@ export const PersonCard = ({ person, onCheckIn, onCheckOut, formatDate, fiveSeco
       <div>
         <p><strong>👤 {person.firstName} {person.lastName}</strong></p>
         <div className="text-left">
-          <p><strong>🏢 Company:</strong> {person.company || "No associated company"}</p>
+          <p><strong>🏢 Company:</strong> {person.companyName || "No associated company"}</p>
           <p><strong>🎓 Title:</strong> {person.title || "No associated title"}</p>
-          <p><strong>📅 Check-in:</strong> {formatDate(person.checkInDate)}</p>
-          <p><strong>📅 Check-out:</strong> {formatDate(person.checkOutDate)}</p>
+          <p><strong>📅 Check-in:</strong> {formatDate(person?.checkInDate)}</p>
+          <p><strong>📅 Check-out:</strong> {formatDate(person?.checkOutDate)}</p>
         </div>
       </div>
 
