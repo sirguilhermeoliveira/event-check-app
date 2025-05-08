@@ -52,4 +52,4 @@ The page must update dynamically in real time without requiring a page refresh.
 1. Make sure you have Meteor.js installed on your machine, if you dont `npm i -g meteor` 
 2. Run in terminal: `meteor`
 2. Run in another terminal: `meteor mongo`
-3. Run in another terminal²: `MONGO_URL=mongodb://127.0.0.1:3001 meteor test --driver-package meteortesting:mocha --once --allow-superuser --port 3002`
+3. Run in another terminal²: `MONGO_URL=mongodb://127.0.0.1:3001 meteor test --driver-package meteortesting:mocha --once --port 3002`
