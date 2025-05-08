@@ -35,14 +35,21 @@ The page must update dynamically in real time without requiring a page refresh.
 
 # How to Run the Project 🚀
 
-## Using Docker
+## Using Docker 
 
 1. Make sure you have Docker installed on your machine.  
 2. Use the command in the terminal: `docker build -t event-check-app .`  
 3. Use the command in the terminal: `docker run -p 3000:3000 event-check-app`  
 
-## Opening the project via terminal  
+## Opening the project via terminal 
 
 1. `npm install -g meteor`  
 2. `meteor npm install`  
 3. `meteor`  
+
+# Running Tests 💻
+
+1. Make sure you have Meteor.js installed on your machine, if you dont `npm i -g meteor` 
+2. Run in terminal: `meteor`
+2. Run in another terminal: `meteor mongo`
+3. Run in another terminal²: `MONGO_URL=mongodb://127.0.0.1:3001 meteor test --driver-package meteortesting:mocha --once --allow-superuser --port 3002`
