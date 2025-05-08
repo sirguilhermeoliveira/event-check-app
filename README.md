@@ -1,7 +1,9 @@
-📝 Requirements
+# Requirements 📝
+
 A mini-app for managing event check-ins.
 
-🎯 Core Features
+## Core Features 🎯
+
 Event Selector
 
 Dropdown displaying event names from the communities collection.
@@ -38,5 +40,6 @@ Company-wise breakdown of current attendees
 
 Number of people not yet checked in
 
-⚡ Real-Time Updates
+## Real-Time Updates ⚡
+
 The page must update dynamically in real time without requiring a page refresh.
