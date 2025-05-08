@@ -1,19 +1,13 @@
-FROM node:16 AS base
+FROM node:22
 
-WORKDIR /app
+RUN npm install -g meteor
 
-COPY package*.json ./
-
-RUN npm install
+WORKDIR /usr/src/app
 
 COPY . .
 
-FROM base AS production
-
-ENV NODE_ENV=production
-ENV MONGO_URL=mongodb://localhost:27017/your-db-name
-ENV ROOT_URL=http://localhost:3000
+RUN meteor npm install
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["meteor"]
