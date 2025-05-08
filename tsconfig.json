@@ -13,6 +13,7 @@
       "skipLibCheck": true
     },
     "include": ["**/*.ts", "**/*.tsx", "client/main.js"],
-    "exclude": ["node_modules"]
+    "exclude": ["node_modules"],
+    "types": ["@testing-library/react"]
   }
   
