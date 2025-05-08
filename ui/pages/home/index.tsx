@@ -11,8 +11,7 @@ import { NoPeopleFound } from '../../components/no-people-found';
 import { FiveSecondsDelayMap, PeopleResponse } from './types';
 import { Events } from 'shared/types';
 
-
-export const Home = () => {
+export const Home: React.FC = () => {
   const [selectedEventId, setSelectedEventId] = useState<string>('');
   const [events, setEvents] = useState<Events[]>([]);
   const [people, setPeople] = useState<PeopleResponse | null>(null);
