@@ -10,12 +10,10 @@
   "dependencies": {
     "@babel/runtime": "^7.26.0",
     "@testing-library/react": "^16.3.0",
-    "@types/enzyme": "^3.10.19",
-    "@types/enzyme-adapter-react-16": "^1.0.9",
     "@types/jsdom": "^21.1.7",
     "canvas": "^3.1.0",
     "jsdom": "^26.1.0",
-    "meteor-node-stubs": "^1.2.12",
+    "meteor-node-stubs": "^1.2.17",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -31,6 +29,7 @@
     "@types/meteor": "^2.9.8",
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.15.15",
+    "@types/sinon": "^17.0.4",
     "@types/testing-library__react": "^10.0.1",
     "autoprefixer": "^10.4.20",
     "chai": "^5.2.0",
@@ -38,6 +37,7 @@
     "lefthook": "^1.8.2",
     "mocha": "^11.2.2",
     "postcss": "^8.4.47",
+    "sinon": "^20.0.0",
     "tailwindcss": "^3.4.14",
     "typescript": "^5.8.3"
   },
